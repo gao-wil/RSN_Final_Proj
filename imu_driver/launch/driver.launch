@@ -1,0 +1,12 @@
+<launch>
+<node name="server" type="server.py" pkg="imu_driver"/>
+<arg name="port" default="/dev/ttyUSB1" />
+<node name="imu_driver" pkg="imu_driver" type="driver.py" output="screen"/>
+<param name="imu_port" value="$(arg port)"/>
+<arg name="gpsport" default="/dev/ttyUSB0" />
+<node name="gps_driver" pkg="gps_driver" type="driver.py" output="screen"/>
+<param name="gps_port" value="$(arg gpsport)"/>
+<arg name="port" default="/dev/ttyUSB2" />
+<node name="ultrasonic_driver" pkg="imu_driver" type="ultrasonic_driver.py" output="screen"/>
+<param name="us_port" value="$(arg usport)"/>
+</launch>

@@ -1,0 +1,5 @@
+<launch>
+<arg name="port" default="/dev/ttyUSB2" />
+<node name="ultrasonic_driver" pkg="imu_driver" type="ultrasonic_driver.py" output="screen"/>
+<param name="us_port" value="$(arg usport)"/>
+</launch>
