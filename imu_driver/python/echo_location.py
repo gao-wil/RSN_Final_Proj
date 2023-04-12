@@ -54,19 +54,22 @@ if __name__ == '__main__':
 			rospy.loginfo(line)
 			a = 1
 			line_parsed = str(line).split(",")
-			yaw = np.deg2rad(float(line_parsed[1]))
-			pitch = np.deg2rad(float(line_parsed[2]))
-			roll = np.deg2rad(float(line_parsed[3]))
-			magx = float(line_parsed[4])/10000
-			magy = float(line_parsed[5])/10000
-			magz = float(line_parsed[6])/10000
-			accelx = float(line_parsed[7])
-			accely = float(line_parsed[8])
-			accelz = float(line_parsed[9])
-			gyrox = float(line_parsed[10])
-			gyroy = float(line_parsed[11])
-			line_temp = line_parsed[12].split("*")
-			gyroz = float(line_temp[0])
+			try:
+				yaw = np.deg2rad(float(line_parsed[1]))
+				pitch = np.deg2rad(float(line_parsed[2]))
+				roll = np.deg2rad(float(line_parsed[3]))
+				magx = float(line_parsed[4])/10000
+				magy = float(line_parsed[5])/10000
+				magz = float(line_parsed[6])/10000
+				accelx = float(line_parsed[7])
+				accely = float(line_parsed[8])
+				accelz = float(line_parsed[9])
+				gyrox = float(line_parsed[10])
+				gyroy = float(line_parsed[11])
+				line_temp = line_parsed[12].split("*")
+				gyroz = float(line_temp[0])
+			except ValueError:
+				continue
 			q = quaternion_client(yaw, pitch, roll)
 			message.yaw=yaw
 			message.pitch=pitch
