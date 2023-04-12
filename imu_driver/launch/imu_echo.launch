@@ -1,8 +1,7 @@
 <launch>
-<node name="server" type="server.py" pkg="imu_driver"/>
-<arg name="portimu" default="/dev/ttyUSB0" />
-<arg name="portecho" default="/dev/ttyUSB1" />
-<node name="echo_driver" pkg="imu_driver" type="echo_location.py" output="screen"/>
-<param name="imu_port" value="$(arg portimu)"/>
-<param name="echo_port" value="$(arg portecho)"/>
+    <arg name = "vec_port"/>
+    <arg name = "ultra_port"/>
+    <node name="sensor_fusion" pkg="imu_driver" type="sensor_fusion.py" args="$(arg vec_port) $(arg ultra_port)" output = "screen"/>
+    <node name= "convert_to_quaternion" type="convert_to_quaternion.py" pkg= "imu_driver"/>
+    <!-- <node name= "listener" type="listener.py" pkg= "imu_driver"/> -->
 </launch>

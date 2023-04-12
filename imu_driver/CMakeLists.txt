@@ -60,7 +60,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate services in the 'srv' folder
  add_service_files(
    FILES
-   ConvertToQuaternions.srv
+   conversion.srv
  )
 
 ## Generate actions in the 'action' folder
@@ -166,10 +166,11 @@ include_directories(
 ## in contrast to setup.py, you can choose the destination
  catkin_install_python(PROGRAMS
 #   scripts/my_python_script
-   python/driver.py
    python/ultrasonic_driver.py
    python/echo_location.py
-   python/server.py
+   python/convert_to_quaternion.py
+   python/sensor_fusion.py
+   python/listener.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 
