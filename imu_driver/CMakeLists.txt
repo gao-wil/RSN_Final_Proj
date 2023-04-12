@@ -170,6 +170,7 @@ include_directories(
    python/ultrasonic_driver.py
    python/echo_location.py
    python/server.py
+   python/listener.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 

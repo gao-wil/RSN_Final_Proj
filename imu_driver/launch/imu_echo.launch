@@ -5,4 +5,5 @@
 <node name="echo_driver" pkg="imu_driver" type="echo_location.py" output="screen"/>
 <param name="imu_port" value="$(arg portimu)"/>
 <param name="echo_port" value="$(arg portecho)"/>
+<node name= "listener" type="listener.py" pkg= "imu_driver"/>
 </launch>

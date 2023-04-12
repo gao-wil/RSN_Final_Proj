@@ -24,7 +24,7 @@ if __name__ == '__main__':
 	rospy.init_node('VectorNav and Ultrasonic Driver')
 	port=rospy.get_param('imu_port')
 	rospy.loginfo('port:' + port)
-	pub = rospy.Publisher('imu', ImuEcho, queue_size=2)
+	pub = rospy.Publisher('fusion', ImuEcho, queue_size=2)
 	serial_port = rospy.get_param('~port', port)
 	serial_baud = rospy.get_param('~baudrate', 115200)
 	port = serial.Serial(serial_port, serial_baud, timeout=1.)
@@ -47,7 +47,7 @@ if __name__ == '__main__':
 		echo_line = port1.read_until(b'\r')
 		rospy.loginfo(echo_line)
 		if str(echo_line).find('R') > 0:
-			message.range = float(str(echo_line)[3:7])
+			message.range = int(str(echo_line)[3:7])
 			
 		line = port.readline()
 		if str(line).find('$VNYMR') > 0:
