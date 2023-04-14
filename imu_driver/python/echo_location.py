@@ -62,7 +62,8 @@ if __name__ == '__main__':
 		line = port.readline()
 		if str(line).find('$VNYMR') > 0:
 			rospy.loginfo(line)
-			a = 1
+			line = str(line)
+			line = line.replace("\x00", "")
 			line_parsed = str(line).split(",")
 			try:
 				yaw = np.deg2rad(float(line_parsed[1]))
