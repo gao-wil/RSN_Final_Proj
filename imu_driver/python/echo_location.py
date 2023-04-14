@@ -7,6 +7,7 @@ import serial
 import utm
 import argparse
 import binascii
+from multiprocessing import Process, Value
 from imu_driver.msg import Vectornav
 from imu_driver.msg import ImuEcho
 from imu_driver.srv import ConvertToQuaternions
@@ -15,12 +16,25 @@ from std_msgs.msg import String
 from std_msgs.msg import Header
 from sensor_msgs.msg import *
 from geometry_msgs.msg import *
+range = 0
+def echo_loop(shared_variable):
+	while not rospy.is_shutdown():
+		echo_line = port1.read_until(b'\r')
+		rospy.loginfo(echo_line)
+		if str(echo_line).find('R') > 0:
+			range = int(str(echo_line)[3:7])
+			shared_variable.value = range
+
 def quaternion_client(yaw, pitch, roll):
 	rospy.wait_for_service('convert_to_quaternion')
 	convert_to_quaternion = rospy.ServiceProxy('convert_to_quaternion', ConvertToQuaternions)
 	response = convert_to_quaternion(yaw, pitch, roll)
 	return response.quat
 if __name__ == '__main__':
+
+	#create shared variable
+	shared_variable = Value('i', 0)
+	
 	rospy.init_node('VectorNav and Ultrasonic Driver')
 	port=rospy.get_param('imu_port')
 	rospy.loginfo('port:' + port)
@@ -43,12 +57,8 @@ if __name__ == '__main__':
 	message = ImuEcho()
 	message.range = 0
 	message_seq_id = int(0) 
-	while not rospy.is_shutdown():
-		echo_line = port1.read_until(b'\r')
-		rospy.loginfo(echo_line)
-		if str(echo_line).find('R') > 0:
-			message.range = int(str(echo_line)[3:7])
-			
+	p = Process(target=echo_loop, args=(shared_variable,)).start()
+	while not rospy.is_shutdown():		
 		line = port.readline()
 		if str(line).find('$VNYMR') > 0:
 			rospy.loginfo(line)
@@ -95,6 +105,7 @@ if __name__ == '__main__':
 			message.header.seq = message_seq_id
 			message.header.frame_id = "imu_echo_frame"
 			message.header.stamp = rospy.Time.now()
+			message.range = int(shared_variable.value)
 			message_seq_id = message_seq_id + int(1)
 			rospy.loginfo(message)			
 			pub.publish(message)
