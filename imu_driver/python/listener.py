@@ -1,45 +1,35 @@
+
 #!/usr/bin/env python3
 import rospy
-from sensor_msgs.msg import PointCloud2, PointField
+from sensor_msgs.msg import PointCloud
 from imu_driver.msg import ImuEcho
-import math
-import struct
+import numpy as np
+from geometry_msgs.msg import Point32
+
+msg = PointCloud()
+
+msg.points = []
 
 def callback(data):
     
 
     print(f"data.yaw: {data.yaw}, data.range: {data.range}")
-    x = float(data.range * math.cos(data.yaw)/1000)
-    y = float(data.range * math.sin(data.yaw)/1000)
+    x = float(data.range * np.cos(data.yaw)/500)
+    y = float(data.range * np.sin(data.yaw)/500)
     print(f"x: {x}, y: {y}")
 
-    pub = rospy.Publisher('my_pointcloud_topic', PointCloud2, queue_size=10)
-    msg = PointCloud2()
+    pub = rospy.Publisher('my_pointcloud_topic', PointCloud, queue_size=10)
+
     msg.header.stamp = rospy.Time.now()
-    msg.header.frame_id = "my_frame_id"
+    msg.header.frame_id = "map"
 
-    # set the fields of the message
-    msg.fields.append(PointField(name="x", offset=0, datatype=PointField.FLOAT32, count=1))
-    msg.fields.append(PointField(name="y", offset=4, datatype=PointField.FLOAT32, count=1))
-    msg.fields.append(PointField(name="z", offset=8, datatype=PointField.FLOAT32, count=1))
-
-    # create some sample points
-    points = [(x, y, 0.0)]
-
-    # set the point cloud data
-    msg.data = []
-    for p in points:
-        msg.data.extend(struct.pack('<fff', *p))
-
-    # set the message metadata
-    msg.point_step = 12
-    msg.row_step = len(msg.data)
-    msg.width = len(points)
-    msg.height = 1
-    msg.is_dense = True
+    msg.points.append(Point32(x, y, 0.0))
+    # print(len(msg.points))
 
     # publish the message
+    # if len(msg.points) == 50:
     pub.publish(msg)
+    # msg.points = []
 
 
 def listener():
