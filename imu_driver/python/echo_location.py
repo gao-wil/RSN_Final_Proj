@@ -59,21 +59,21 @@ if __name__ == '__main__':
 	message_seq_id = int(0) 
 	p = Process(target=echo_loop, args=(shared_variable,)).start()
 				#first time, we don't integrate
-	t1= 0
-	t2= 0
-	accel_x1 = 0
-	accel_y1 = 0
-	Xframe_velocity = 0
-	Yframe_velocity = 0
+	t1= float(0)
+	t2= float(0)
+	accel_x1 = float(0)
+	accel_y1 = float(0)
+	Xframe_velocity = float(0)
+	Yframe_velocity = float(0)
 				
-	world_velocity_x_prev = 0
-	world_velocity_y_prev = 0
-	world_velocity_x_curr = 0
-	world_velocity_y_curr = 0				
+	world_velocity_x_prev = float(0)
+	world_velocity_y_prev = float(0)
+	world_velocity_x_curr = float(0)
+	world_velocity_y_curr = float(0)				
 
 				
-	Sensor_position_x = 0
-	Sensor_position_y = 0
+	Sensor_position_x = float(0)
+	Sensor_position_y = float(0)
 	
 	while not rospy.is_shutdown():		
 		line = port.readline()
@@ -127,7 +127,7 @@ if __name__ == '__main__':
 			message_seq_id = message_seq_id + int(1)
 			if message_seq_id == 0:
 				#first time, we don't integrate
-				t1= message.header.stamp.sec + message.header.stamp.nsec*(1e-9)
+				t1= float(message.header.stamp.secs) + float(message.header.stamp.nsecs)*(1e-9)
 				t2= 0
 				accel_x1 = accelx
 				accel_y1 = accely
@@ -143,7 +143,7 @@ if __name__ == '__main__':
 				Sensor_position_x = 0
 				Sensor_position_y = 0
 			else:
-				t2 = message.header.stamp.secs + message.header.stamp.nsecs*(1e-9)
+				t2 = float(message.header.stamp.secs) + float(message.header.stamp.nsecs)*(1e-9)
 				#integration acceleration for velocity
 				Xframe_velocity = Xframe_velocity+(t2-t1)*(1/2)*(accel_x1+accelx)
 				Yframe_velocity = Yframe_velocity+(t2-t1)*(1/2)*(accel_y1+accely)
