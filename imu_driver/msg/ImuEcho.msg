@@ -6,3 +6,5 @@ float64 yaw
 float64 pitch
 float64 roll
 int64 range
+float64 sensor_x
+float64 sensor_y

@@ -110,6 +110,43 @@ if __name__ == '__main__':
 			message_seq_id = message_seq_id + int(1)
 			rospy.loginfo(message)			
 			pub.publish(message)
+			if message_seq_id == 0
+				#first time, we don't integrate
+				t1= message.header.stamp.sec + message.header.stamp.nsec*(1e-9)
+				t2= 0
+				accel_x1 = accelx
+				accel_y1 = accely
+				Xframe_velocity = 0
+				Yframe_velocity = 0
+				
+				world_velocity_x_prev = 0
+				world_velocity_y_prev = 0
+				world_velocity_x_curr = 0
+				world_velocity_y_curr = 0				
+
+				
+				Sensor_position_x = 0
+				Sensor_position_y = 0
+			else
+				t2 = message.header.stamp.sec + message.header.stamp.nsec*(1e-9)
+				#integration acceleration for velocity
+				Xframe_velocity = Xframe_velocity+(t2-t1)*(1/2)*(accel_x1+accelx)
+				Yframe_velocity = Yframe_velocity+(t2-t1)*(1/2)*(accel_y1+accely)
+				#break velocity into x y world components
+				world_velocity_x_curr = Xframe_velocity*sin(yaw)+Yframe_velocity*cos(yaw)
+				world_velocity_y_curr = Xframe_velocity*cos(yaw)+Yframe_velocity*sin(yaw)
+				Sensor_position_x = Sensor_position_x + (t2-t1)*(1/2)(world_velocity_x_curr + world_velocity_x_prev)
+				Sensor_position_y = Sensor_position_y + (t2-t1)*(1/2)(world_velocity_y_curr + world_velocity_y_prev)
+				t1=t2
+				accel_x1 = accelx
+				accel_y1 = accely
+				world_velocity_x_prev = world_velocity_x_curr
+				world_velocity_y_prev = world_velocity_y_curr
+				message.sensor_x =Sensor_position_x
+				message.sensor_y =Sensor_position_y
+				pub.publish(message)
+				
+				
 						
 		else: 
 			rospy.loginfo("not VNYMR msg")
