@@ -69,16 +69,16 @@ if __name__ == '__main__':
 				yaw = np.deg2rad(float(line_parsed[1]))
 				pitch = np.deg2rad(float(line_parsed[2]))
 				roll = np.deg2rad(float(line_parsed[3]))
-				magx = float(line_parsed[4])/10000
-				magy = float(line_parsed[5])/10000
-				magz = float(line_parsed[6])/10000
+				#magx = float(line_parsed[4])/10000
+				#magy = float(line_parsed[5])/10000
+				#magz = float(line_parsed[6])/10000
 				accelx = float(line_parsed[7])
 				accely = float(line_parsed[8])
 				accelz = float(line_parsed[9])
-				gyrox = float(line_parsed[10])
-				gyroy = float(line_parsed[11])
-				line_temp = line_parsed[12].split("*")
-				gyroz = float(line_temp[0])
+				#gyrox = float(line_parsed[10])
+				#gyroy = float(line_parsed[11])
+				#line_temp = line_parsed[12].split("*")
+				#gyroz = float(line_temp[0])
 			except ValueError:
 				continue
 			q = quaternion_client(yaw, pitch, roll)
@@ -92,17 +92,17 @@ if __name__ == '__main__':
 			message.imu.orientation.w= q.w
 			message.IMU_string = str(line)
 			
-			message.imu.angular_velocity.x=gyrox
-			message.imu.angular_velocity.y=gyroy
-			message.imu.angular_velocity.z=gyroz
+			#message.imu.angular_velocity.x=gyrox
+			#message.imu.angular_velocity.y=gyroy
+			#message.imu.angular_velocity.z=gyroz
 			
 			message.imu.linear_acceleration.x=accelx
 			message.imu.linear_acceleration.y=accely
 			message.imu.linear_acceleration.z=accelz
 			
-			message.mag_field.magnetic_field.x=magx
-			message.mag_field.magnetic_field.y=magy
-			message.mag_field.magnetic_field.z=magz
+			#message.mag_field.magnetic_field.x=magx
+			#message.mag_field.magnetic_field.y=magy
+			#message.mag_field.magnetic_field.z=magz
 			message.header.seq = message_seq_id
 			message.header.frame_id = "imu_echo_frame"
 			message.header.stamp = rospy.Time.now()
