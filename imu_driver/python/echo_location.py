@@ -124,7 +124,6 @@ if __name__ == '__main__':
 			message.header.frame_id = "imu_echo_frame"
 			message.header.stamp = rospy.Time.now()
 			message.range = int(shared_variable.value)
-			message_seq_id = message_seq_id + int(1)
 			if message_seq_id == 0:
 				#first time, we don't integrate
 				t1= float(message.header.stamp.secs) + float(message.header.stamp.nsecs)*(1e-9)
@@ -161,6 +160,7 @@ if __name__ == '__main__':
 				message.sensor_y =Sensor_position_y
 				rospy.loginfo(message)
 				pub.publish(message)
+			message_seq_id = message_seq_id + int(1)
 				
 				
 						
