@@ -77,7 +77,7 @@ if __name__ == '__main__':
 	
 	while not rospy.is_shutdown():		
 		line = port.readline()
-		if str(line).find('$VNYMR') > 0:
+		if str(line).find('$VNYIA') > 0:
 			rospy.loginfo(line)
 			line = str(line)
 			line = line.replace("\x00", "")
