@@ -51,8 +51,7 @@ if __name__ == '__main__':
 	port1 = serial.Serial(serial_port1, serial_baud1, timeout=1.)
 	rospy.loginfo("using Ultrasonic on port " +serial_port1 + " at " +str(serial_baud1))
 
-	
-	port.write(binascii.a2b_qp("$VNWRG,06,14*XX"))
+	#port.write(binascii.a2b_qp("$VNWRG,06,17*XX"))
 	port.write(binascii.a2b_qp("$VNWRG,07,40*XX"))
 	message = ImuEcho()
 	message.range = 0
@@ -89,9 +88,12 @@ if __name__ == '__main__':
 				#magx = float(line_parsed[4])/10000
 				#magy = float(line_parsed[5])/10000
 				#magz = float(line_parsed[6])/10000
-				accelx = float(line_parsed[7])
-				accely = float(line_parsed[8])
-				accelz = float(line_parsed[9])
+				#accelx = float(line_parsed[7])
+				accelx = float(line_parsed[4])
+				#accely = float(line_parsed[8])
+				accely = float(line_parsed[5])
+				#accelz = float(line_parsed[9])
+				accelz = float(line_parsed[6])
 				#gyrox = float(line_parsed[10])
 				#gyroy = float(line_parsed[11])
 				#line_temp = line_parsed[12].split("*")
