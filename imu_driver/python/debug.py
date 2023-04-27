@@ -14,8 +14,8 @@ def callback(data):
     t.header.stamp = rospy.Time.now()
     t.header.frame_id = "map"
     t.child_frame_id = "sensor_frame"
-    t.transform.translation.x = 0.0
-    t.transform.translation.y = 0.0
+    t.transform.translation.x = data.x
+    t.transform.translation.y = data.y
     t.transform.translation.z = 0.0
     q = tf_conversions.transformations.quaternion_from_euler(0, 0, np.rad2deg(data.yaw))
     t.transform.rotation.x = q[0]
@@ -25,11 +25,8 @@ def callback(data):
 
     br.sendTransform(t)
 
-
-def transform():
+if __name__ == '__main__':
+    
     rospy.init_node('transform', anonymous=True)
     rospy.Subscriber("/fusion",ImuEcho,callback)
     rospy.spin()
-
-if __name__ == '__main__':
-    transform()

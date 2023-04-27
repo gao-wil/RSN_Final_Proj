@@ -13,6 +13,8 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   std_msgs
   message_generation
+  tf2
+  tf2_ros
 )
 
 ## System dependencies are found with CMake's conventions
@@ -169,9 +171,10 @@ include_directories(
    python/driver.py
    python/ultrasonic_driver.py
    python/echo_location.py
-   python/transform.py
    python/server.py
    python/listener.py
+   python/tf_visualizer.py
+   python/debug.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 
