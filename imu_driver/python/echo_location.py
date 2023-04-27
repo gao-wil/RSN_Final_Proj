@@ -149,15 +149,26 @@ if __name__ == '__main__':
 				Xframe_velocity = Xframe_velocity+(t2-t1)*(1/2)*(accel_x1+accelx)
 				Yframe_velocity = Yframe_velocity+(t2-t1)*(1/2)*(accel_y1+accely)
 				#break velocity into x y world components
-				world_velocity_x_curr = Xframe_velocity*np.sin(yaw)+Yframe_velocity*np.cos(yaw)
-				world_velocity_y_curr = Xframe_velocity*np.cos(yaw)+Yframe_velocity*np.sin(yaw)
-				Sensor_position_x = Sensor_position_x + (t2-t1)*(1/2)*(world_velocity_x_curr + world_velocity_x_prev)
-				Sensor_position_y = Sensor_position_y + (t2-t1)*(1/2)*(world_velocity_y_curr + world_velocity_y_prev)
+				# world_velocity_x_curr = Xframe_velocity*np.sin(yaw)+Yframe_velocity*np.cos(yaw)
+				# world_velocity_y_curr = Xframe_velocity*np.cos(yaw)+Yframe_velocity*np.sin(yaw)
+				# Sensor_position_x = Sensor_position_x + (t2-t1)*(1/2)*(world_velocity_x_curr + world_velocity_x_prev)
+				# Sensor_position_y = Sensor_position_y + (t2-t1)*(1/2)*(world_velocity_y_curr + world_velocity_y_prev)
+
+				#the below lines indicate that Note that the code now simply integrates the acceleration
+				#  to get the X and Y frame velocities, and then integrates these velocities to obtain 
+				# the position of the sensor without breaking down the velocity into x and y components 
+				# in the world frame using the current yaw angle.
+				Sensor_position_x = Sensor_position_x + (t2-t1)*(1/2)*(Xframe_velocity + world_velocity_x_prev)
+				Sensor_position_y = Sensor_position_y + (t2-t1)*(1/2)*(Yframe_velocity + world_velocity_y_prev)
 				t1=t2
 				accel_x1 = accelx
 				accel_y1 = accely
-				world_velocity_x_prev = world_velocity_x_curr
-				world_velocity_y_prev = world_velocity_y_curr
+				# world_velocity_x_prev = world_velocity_x_curr
+				world_velocity_x_prev = Xframe_velocity
+
+				# world_velocity_y_prev = world_velocity_y_curr
+				world_velocity_y_prev = Yframe_velocity
+
 				message.sensor_x =Sensor_position_x
 				message.sensor_y =Sensor_position_y
 				rospy.loginfo(message)
