@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 import rospy
 from sensor_msgs.msg import PointCloud
@@ -18,16 +17,14 @@ def callback(data):
     y = float(data.range * np.sin(data.yaw)/500)
     print(f"x: {x}, y: {y}")
 
-    pub = rospy.Publisher('my_pointcloud_topic', PointCloud, queue_size=10)
+    pub = rospy.Publisher('/pointcloud_topic', PointCloud, queue_size=10)
 
     msg.header.stamp = rospy.Time.now()
-    msg.header.frame_id = "map"
+    msg.header.frame_id = "sensor_frame"
 
     msg.points.append(Point32(x, y, 0.0))
     # print(len(msg.points))
 
-    # publish the message
-    # if len(msg.points) == 50:
     pub.publish(msg)
     # msg.points = []
 
