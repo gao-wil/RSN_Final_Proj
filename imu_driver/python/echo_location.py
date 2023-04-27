@@ -43,21 +43,25 @@ if __name__ == '__main__':
 	serial_baud = rospy.get_param('~baudrate', 115200)
 	port = serial.Serial(serial_port, serial_baud, timeout=1.)
 	rospy.loginfo("using VectorNav on port " +serial_port + " at " +str(serial_baud))
-	
-	port1=rospy.get_param('echo_port')
-	rospy.loginfo('port:' + port1)
-	serial_port1 = rospy.get_param('~port', port1)
-	serial_baud1 = rospy.get_param('~baudrate', 57600)
-	port1 = serial.Serial(serial_port1, serial_baud1, timeout=1.)
-	rospy.loginfo("using Ultrasonic on port " +serial_port1 + " at " +str(serial_baud1))
-
+	try:
+		port1=rospy.get_param('echo_port')
+		rospy.loginfo('port:' + port1)
+		serial_port1 = rospy.get_param('~port', port1)
+		serial_baud1 = rospy.get_param('~baudrate', 57600)
+		port1 = serial.Serial(serial_port1, serial_baud1, timeout=1.)
+		rospy.loginfo("using Ultrasonic on port " +serial_port1 + " at " +str(serial_baud1))
+	except:
+		pass
 	#port.write(binascii.a2b_qp("$VNWRG,06,17*XX"))
 	port.write(binascii.a2b_qp("$VNWRG,07,40*XX"))
 	message = ImuEcho()
 	message.range = 0
 	message_seq_id = int(0) 
-	p = Process(target=echo_loop, args=(shared_variable,)).start()
-				#first time, we don't integrate
+	try:
+		p = Process(target=echo_loop, args=(shared_variable,)).start()
+	except:
+		pass	
+	#first time, we don't integrate
 	t1= float(0)
 	t2= float(0)
 	accel_x1 = float(0)
@@ -160,7 +164,7 @@ if __name__ == '__main__':
 				world_velocity_y_prev = world_velocity_y_curr
 				message.sensor_x =Sensor_position_x
 				message.sensor_y =Sensor_position_y
-				rospy.loginfo(message)
+				#rospy.loginfo(message)
 				pub.publish(message)
 			message_seq_id = message_seq_id + int(1)
 				
