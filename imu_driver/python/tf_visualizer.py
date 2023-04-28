@@ -4,6 +4,7 @@ from imu_driver.msg import ImuEcho
 import tf_conversions
 import tf2_ros
 import numpy as np
+from numpy import sin ,cos
 import geometry_msgs.msg
 from sensor_msgs.msg import PointCloud
 from geometry_msgs.msg import Point32
@@ -27,12 +28,21 @@ def callback(data):
     sensor_x = data.sensor_x
     sensor_y = data.sensor_y 
     range = (data.range)/1000
-    t.transform.translation.x = sensor_x
-    t.transform.translation.y = sensor_y
-    # t.transform.translation.x = 0.5
-    # t.transform.translation.y = 0.4
+
+    # for no translation
+    t.transform.translation.x = 0.0
+    t.transform.translation.y = 0.0
     t.transform.translation.z = 0.0
-    q = tf_conversions.transformations.quaternion_from_euler(0, 0, data.yaw)
+
+    # for translation
+    # t.transform.translation.x = sensor_x
+    # t.transform.translation.y = sensor_y
+    # t.transform.translation.z = sensor_z
+
+    # for 2D rotation
+    # q = tf_conversions.transformations.quaternion_from_euler(0.0, 0.0, data.yaw)
+    # for 3D rotation
+    q = tf_conversions.transformations.quaternion_from_euler(-data.roll, -data.pitch, -data.yaw)
     t.transform.rotation.x = q[0]
     t.transform.rotation.y = q[1]
     t.transform.rotation.z = q[2]
@@ -45,7 +55,17 @@ def callback(data):
     msg.header.stamp = rospy.Time.now()
     msg.header.frame_id = "map"
 
-    msg.points.append(Point32(range*np.cos(data.yaw)+sensor_x, range*np.sin(data.yaw)+sensor_y, 0.0))
+    # for 2D rotation
+    # msg.points.append(Point32(range*np.cos(data.yaw), range*np.sin(data.yaw), 0.0))
+
+    # for 2D rotation and translation
+    # msg.points.append(Point32(range*np.cos(data.yaw)+sensor_x, range*np.sin(data.yaw)+sensor_y, 0.0))
+
+    # for 3d rotation
+    x_new = cos(-data.yaw)*cos(-data.pitch)*range
+    y_new = sin(-data.yaw)*cos(-data.pitch)*range
+    z_new = -sin(-data.pitch)*range
+    msg.points.append(Point32(x_new, y_new, z_new))
     pub.publish(msg)
 
 if __name__ == '__main__':
